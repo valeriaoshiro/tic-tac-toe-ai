@@ -3,8 +3,12 @@ $(document).ready(function(){
 	$('.squares').click(function(e){
 		if(isCompTurn){
 			e.target.innerHTML = "X";
+			isCompTurn = !isCompTurn;
+			$(this).off('click');
 		} else {
-			e.target.innerHTML = e.target.id;
+			e.target.innerHTML = "O";
+			isCompTurn = !isCompTurn;
+			$(this).off('click');
 		}
 		
 	})
