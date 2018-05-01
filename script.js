@@ -1,48 +1,27 @@
 $(document).ready(function(){
 	let isCompTurn = false;
-	let turnCount = 0;
 	let board = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 
-	function compTurn(){
-		turnCount++;
-		let spot = availableSpots()[0];
-		console.log('spot ', spot);
+	var compTurn = () => {
+		let spot = availableSpots()[0]; //temporary
 		$('.squares')[spot].innerHTML = 'O';
-		$(`.squares`).off('click', `#${spot}`);
 		board[spot] = 'O';
+		$(`.squares`).off('click', `#${spot}`);
+		isItDone();
+	}	
+
+	var isItDone = () => {
 		if(winningComb()){
 			$('.squares').off('click');
 			isCompTurn ? $('h1').html('You lost') : $('h1').html('You won');
-		} else if(!winningComb() && turnCount === 9){
+			return true;
+		} else if(!winningComb() && availableSpots().length === 0){
 			$('h1').html("It's a tie");
+			return true;
 		}
 		isCompTurn = !isCompTurn;
+		return false;
 	}
-
-	
-
-	$('.squares').click(function(e){
-		turnCount++;
-
-		if(!isCompTurn){
-			e.target.innerHTML = 'X';
-			board[e.target.id] = 'X';
-		}
-
-		if(winningComb()){
-			$('.squares').off('click');
-			isCompTurn ? $('h1').html('You lost') : $('h1').html('You won');
-		} else if(!winningComb() && turnCount === 9){
-			$('h1').html("It's a tie");
-		} else {
-			$(this).off('click');
-		isCompTurn = !isCompTurn;
-		compTurn();
-		}
-
-
-		
-	})
 
 	var winningComb = () => {
 		if(board[0] === board[1] && board[0] === board[2] ||
@@ -62,5 +41,15 @@ $(document).ready(function(){
 	var availableSpots = () => {
 		return board.filter(i => i != 'X' && i != 'O');
 	}
+
+	/****** EVENT LISTENERS ******/
+	$('.squares').click(function(e){
+		if(!isCompTurn){
+			e.target.innerHTML = 'X';
+			board[e.target.id] = 'X';
+			$(this).off('click');
+		}
+		if(!isItDone()) compTurn();
+	})
 
 })
