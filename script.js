@@ -1,6 +1,22 @@
 $(document).ready(function(){
-	let isCompTurn = false;
-	let board = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+	let isCompTurn, board;
+
+	var init = () => {
+		isCompTurn = false;
+		board = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+		$('.squares').html('');
+		$('h1').html('');
+
+		$('.squares').on('click', function(e){
+			if(!isCompTurn){
+				e.target.innerHTML = 'X';
+				board[e.target.id] = 'X';
+				$(this).off('click');
+			}
+			console.log('user ', board)
+			if(!isItDone()) compTurn();
+		});
+	}
 
 	var compTurn = () => {
 		let spot = availableSpots()[0]; //temporary
@@ -8,6 +24,7 @@ $(document).ready(function(){
 		board[spot] = 'O';
 		$(`.squares`).off('click', `#${spot}`);
 		isItDone();
+		console.log('comp', board)
 	}	
 
 	var isItDone = () => {
@@ -42,14 +59,11 @@ $(document).ready(function(){
 		return board.filter(i => i != 'X' && i != 'O');
 	}
 
-	/****** EVENT LISTENERS ******/
-	$('.squares').click(function(e){
-		if(!isCompTurn){
-			e.target.innerHTML = 'X';
-			board[e.target.id] = 'X';
-			$(this).off('click');
-		}
-		if(!isItDone()) compTurn();
-	})
+	$('button').on('click', function(e){
+		init();
+	});
+
+	/****** START GAME ******/
+	init();
 
 })
