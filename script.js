@@ -1,17 +1,32 @@
 $(document).ready(function(){
-	let isCompTurn = true;
+	let isCompTurn = false;
 	let turnCount = 0;
 	let board = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+
+	function compTurn(){
+		turnCount++;
+		let spot = availableSpots()[0];
+		console.log('spot ', spot);
+		$('.squares')[spot].innerHTML = 'O';
+		$(`.squares`).off('click', `#${spot}`);
+		board[spot] = 'O';
+		if(winningComb()){
+			$('.squares').off('click');
+			isCompTurn ? $('h1').html('You lost') : $('h1').html('You won');
+		} else if(!winningComb() && turnCount === 9){
+			$('h1').html("It's a tie");
+		}
+		isCompTurn = !isCompTurn;
+	}
+
+	
 
 	$('.squares').click(function(e){
 		turnCount++;
 
-		if(isCompTurn){
+		if(!isCompTurn){
 			e.target.innerHTML = 'X';
 			board[e.target.id] = 'X';
-		} else {
-			e.target.innerHTML = 'O';
-			board[e.target.id] = 'O';
 		}
 
 		if(winningComb()){
@@ -19,10 +34,14 @@ $(document).ready(function(){
 			isCompTurn ? $('h1').html('You lost') : $('h1').html('You won');
 		} else if(!winningComb() && turnCount === 9){
 			$('h1').html("It's a tie");
+		} else {
+			$(this).off('click');
+		isCompTurn = !isCompTurn;
+		compTurn();
 		}
 
-		$(this).off('click');
-		isCompTurn = !isCompTurn;
+
+		
 	})
 
 	var winningComb = () => {
@@ -38,6 +57,10 @@ $(document).ready(function(){
 		} else {
 			return false;
 		}
+	}
+
+	var availableSpots = () => {
+		return board.filter(i => i != 'X' && i != 'O');
 	}
 
 })
