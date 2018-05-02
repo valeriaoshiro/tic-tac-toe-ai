@@ -4,8 +4,10 @@ $(document).ready(function(){
 	var init = () => {
 		isCompTurn = false;
 		board = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+		console.log('initial board', board);
 		$('.squares').html('');
 		$('h1').html('');
+		$('.squares').off('click');
 
 		$('.squares').on('click', function(e){
 			if(!isCompTurn){
