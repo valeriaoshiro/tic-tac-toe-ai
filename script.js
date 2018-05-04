@@ -4,7 +4,6 @@ $(document).ready(function(){
 	let init = () => {
 		turn = 'X';
 		board = [0, 1, 2, 3, 4, 5, 6, 7, 8];
-		console.log('initial board', board);
 		$('.squares').html('');
 		$('h1').html('');
 		$('.squares').off('click');
@@ -15,7 +14,6 @@ $(document).ready(function(){
 				board[e.target.id] = turn;
 				$(this).off('click');
 			}
-			console.log('user', board);
 			if(!isItDone(board, turn)) compTurn();
 		});
 	}
@@ -25,28 +23,19 @@ $(document).ready(function(){
 		$('.squares')[spot].innerHTML = 'O';
 		board[spot] = 'O';
 		$(`.squares`).off('click', `#${spot}`);
-		console.log('comp', board);
 		isItDone(board, turn);
 	}	
 
 	let isItDone = (newBoard, newTurn) => {
 		if(winningComb(newBoard, newTurn)){
 			$('.squares').off('click');
-			if(newTurn === 'X'){
-				$('h1').html('You won');
-			} else if (turn === 'O'){
-				$('h1').html('You lost');
-			}
+			newTurn === 'X' ? $('h1').html('You won') : $('h1').html('You lost');
 			return true;
 		} else if(!winningComb(newBoard, newTurn) && availableSpots(newBoard).length === 0){
 			$('h1').html("It's a tie");
 			return true;
 		}
-		if(turn === 'X'){
-			turn = 'O';
-		} else if (turn === 'O'){
-			turn = 'X';
-		}
+		turn = turn === 'X' ? 'O' : 'X';
 		return false;
 	}
 
@@ -69,58 +58,51 @@ $(document).ready(function(){
 		return newBoard.filter(i => i != 'X' && i != 'O');
 	}
 
-	let minimax = (reboard, player) => {	
-   		let array = availableSpots(reboard);
-  		if (winningComb(reboard, 'X')) {
-    		return {
-      			score: -10
-    		};
-  		} else if (winningComb(reboard, 'O')) {
-    		return {
-      			score: 10
-    		};
-  		} else if (array.length === 0) {
-    		return {
-      			score: 0
-    		};
+	let minimax = (newBoard, newTurn) => {	
+   		let availSpots = availableSpots(newBoard);
+  		if (winningComb(newBoard, 'X')) {
+    		return {score: -10};
+  		} else if (winningComb(newBoard, 'O')) {
+    		return {score: 10};
+  		} else if (availSpots.length === 0) {
+    		return {score: 0};
   		}
 
   		var moves = [];
-  		for (var i = 0; i < array.length; i++) {
-    		var move = {};
-    		move.index = reboard[array[i]];
-    		reboard[array[i]] = player; 
+  		availSpots.forEach(spot => {
+  			var move = {};
+    		move.index = newBoard[spot];
+    		newBoard[spot] = newTurn; 
 
-    		if(player == 'O'){
-    			var g = minimax(reboard, 'X');
+    		if(newTurn == 'O'){
+    			var g = minimax(newBoard, 'X');
       			move.score = g.score;
     		} else {
-    			var g = minimax(reboard, 'O');
+    			var g = minimax(newBoard, 'O');
       			move.score = g.score;
     		}
-    		reboard[array[i]] = move.index;
+    		newBoard[spot] = move.index;
     		moves.push(move);
-  		}
+  		});
 
   		var bestMove;
-  		if (player == 'O') {
+  		if (newTurn == 'O') {
     		var bestScore = -10000;
-    		for (var i = 0; i < moves.length; i++) {
-      			if (moves[i].score > bestScore) {
-        			bestScore = moves[i].score;
+    		moves.forEach((move, i) => {
+    			if (move.score > bestScore) {
+        			bestScore = move.score;
         			bestMove = i;
       			}
-    		}
+    		});
   		} else {
     		var bestScore = 10000;
-    		for (var i = 0; i < moves.length; i++) {
-      			if (moves[i].score < bestScore) {
-        			bestScore = moves[i].score;
+    		moves.forEach((move, i) => {
+    			if (move.score < bestScore) {
+        			bestScore = move.score;
         			bestMove = i;
       			}
-    		}
+    		});
   		}
-  		// console.log('moves[bestMove]', moves[bestMove])
   		return moves[bestMove];
 	}
 
