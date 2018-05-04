@@ -1,10 +1,34 @@
 body {
     background: gray;
+    margin: 0 auto;
+    width: 50%;
+    text-align: center;
+}
+
+table {
+	margin: 20px auto;
+	border-collapse: collapse;
 }
 
 .squares {
-	border: 1px solid black;
+	/*border: 1px solid black;*/
 	width: 30px;
 	height: 30px;
 	display: inline-block;
+}
+
+.left{
+	border-right: 1px solid black;
+}
+
+.right{
+	border-left: 1px solid black;
+}
+
+.top{
+	border-bottom: 1px solid black;
+}
+
+.bottom {
+	border-top: 1px solid black;
 }
