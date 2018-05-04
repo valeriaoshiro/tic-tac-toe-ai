@@ -20,10 +20,12 @@ $(document).ready(function(){
 
 	let compTurn = () => {
 		let spot = minimax(board, turn).index;
-		$('.squares')[spot].innerHTML = 'O';
-		board[spot] = 'O';
-		$(`.squares`).off('click', `#${spot}`);
-		isItDone(board, turn);
+		setTimeout(()=>{
+			$('.squares')[spot].innerHTML = 'O';
+			board[spot] = 'O';
+			$(`.squares`).off('click', `#${spot}`);
+			isItDone(board, turn);
+		}, 500);
 	}	
 
 	let isItDone = (newBoard, newTurn) => {
