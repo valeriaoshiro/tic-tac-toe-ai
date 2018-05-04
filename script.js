@@ -5,7 +5,7 @@ $(document).ready(function(){
 		turn = 'X';
 		board = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 		$('.squares').html('');
-		$('h1').html('');
+		$('h2').html('');
 		$('.squares').off('click');
 
 		$('.squares').on('click', function(e){
@@ -29,10 +29,10 @@ $(document).ready(function(){
 	let isItDone = (newBoard, newTurn) => {
 		if(winningComb(newBoard, newTurn)){
 			$('.squares').off('click');
-			newTurn === 'X' ? $('h1').html('You won') : $('h1').html('You lost');
+			newTurn === 'X' ? $('h2').html('You won') : $('h2').html('You lost');
 			return true;
 		} else if(!winningComb(newBoard, newTurn) && availableSpots(newBoard).length === 0){
-			$('h1').html("It's a tie");
+			$('h2').html("It's a tie");
 			return true;
 		}
 		turn = turn === 'X' ? 'O' : 'X';
